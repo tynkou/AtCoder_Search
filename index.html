@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AtCoder 問題文・解説全文検索</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+<div class="container py-5">
+    <h1 class="mb-4 text-center fw-bold">AtCoder 問題文・解説全文検索</h1>
+
+    <!-- 検索・絞り込みフォーム -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <form method="GET" action="">
+                <div class="row g-3">
+                    <!-- キーワード入力 -->
+                    <div class="col-md-6">
+                        <label for="keyword" class="form-label fw-semibold">検索キーワード</label>
+                        <input type="text" class="form-control" id="keyword" name="keyword" value="{{ keyword }}" placeholder="例: 動的計画法, ダイクストラ, 累積和">
+                    </div>
+
+                    <!-- コンテスト種別 -->
+                    <div class="col-md-3">
+                        <label for="contest_type" class="form-label fw-semibold">コンテスト種別</label>
+                        <select class="form-select" id="contest_type" name="contest_type">
+                            <option value="">すべて</option>
+                            <option value="abc" {% if contest_type == 'abc' %}selected{% endif %}>ABC</option>
+                            <option value="arc" {% if contest_type == 'arc' %}selected{% endif %}>ARC</option>
+                            <option value="agc" {% if contest_type == 'agc' %}selected{% endif %}>AGC</option>
+                        </select>
+                    </div>
+
+                    <!-- 配点絞り込み -->
+                    <div class="col-md-3">
+                        <label class="form-label fw-semibold">配点範囲</label>
+                        <div class="input-group">
+                            <input type="number" class="form-control" name="min_score" value="{{ min_score }}" placeholder="Min">
+                            <span class="input-group-text">〜</span>
+                            <input type="number" class="form-control" name="max_score" value="{{ max_score }}" placeholder="Max">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-4 text-end">
+                    <a href="/atcoder" class="btn btn-outline-secondary me-2">リセット</a>
+                    <button type="submit" class="btn btn-primary px-4">検索する</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 検索結果表示エリア -->
+    <div class="card shadow-sm">
+        <div class="card-header bg-white">
+            <h5 class="card-title mb-0">検索結果 (最大100件表示)</h5>
+        </div>
+        <div class="card-body p-0">
+            {% if results %}
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+    <thead class="table-light">
+        <tr>
+            <th>コンテスト</th>
+            <th>問題名</th>
+            <th>リンク</th>
+        </tr>
+    </thead>
+                <table class="table table-hover align-middle mb-0">
+                    <tbody>
+                        {% for row in results %}
+                        <tr>
+                            <td><span class="badge bg-secondary">{{ row['contest_id'].upper() }}</span></td>
+                            <td class="fw-bold">{{ row['title'] }}</td>
+                            <td>
+                                <!-- 問題ページヘのリンク -->
+                                <a href="{{ row['url'] }}" target="_blank" class="btn btn-sm btn-outline-primary me-1">問題を見る</a>
+                                
+                                <!-- DBから取得した解説URLへのリンク -->
+                                {% if row['editorial_url'] %}
+                                    <a href="{{ row['editorial_url'] }}" target="_blank" class="btn btn-sm btn-outline-success">解説を見る</a>
+                                {% else %}
+                                    <a href="https://atcoder.jp/contests/{{ row['contest_id'] }}/editorial" target="_blank" class="btn btn-sm btn-outline-secondary">解説一覧</a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                </div>
+            {% else %}
+                <div class="p-4 text-center text-muted">
+                    該当する問題が見つかりませんでした。キーワードや絞り込み条件を変えて試してください。
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

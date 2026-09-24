@@ -1,0 +1,7 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /atcoder/
+
+    # /atcoder/ 直接アクセスの場合は /atcoder/index.cgi へリダイレクト
+    RewriteRule ^$ index.cgi [R=301,L]
+</IfModule>
